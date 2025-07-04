@@ -3,6 +3,11 @@ from src.langgraphagenticai.ui.streamlitui.loadui import LoadStreamlitUI
 from src.langgraphagenticai.LLMs.groqllm import GroqLLM
 from src.langgraphagenticai.graph.graph_builder import GraphBuilder
 from src.langgraphagenticai.ui.streamlitui.display_result import DisplayResultStreamlit
+import traceback
+import sys
+import io
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+
 
 def load_langgraph_agenticai_app():
     
@@ -46,13 +51,11 @@ def load_langgraph_agenticai_app():
             try:
                 graph=graph_builder.setup_graph(usecase)
                 DisplayResultStreamlit(usecase,graph,user_message).display_result_on_ui()
+                           
             except Exception as e:
                 st.error(f"Error : Graph set up failed- {e}")
-                return
+                st.code(traceback.format_exc())
 
         except Exception as e:
-                st.error(f"Error : Graph set up failed- {e}")
-                return
-
-    
-    
+            st.error(f"Error: Application failed - {e}")
+            st.code(traceback.format_exc())
